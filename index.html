@@ -212,10 +212,9 @@
                             Upon acquiring <b>SeTok</b>, we propose to integrate it with the pre-trained LLM to construct an MLLM, i.e., <b>Setokim</b>.
                             The overall framework is depicted in Figure 3.
                             The input image will be tokenized into a sequence of semantic-equivalent visual tokens by <b>SeTok</b>, which are then concatenated with text tokens to form a unified multimodal sequence. 
-                            To effectively distinguish between modalities and facilitate visual content generation, two special tokens, `<em>[Img]</em>' and `<em>[/Img]</em>' are introduced to signify the beginning and the end of the visual sequence, respectively.
+                            To effectively distinguish between modalities and facilitate visual content generation, two special tokens, '<em>[Img]</em>' and '<em>[/Img]</em>' are introduced to signify the beginning and the end of the visual sequence, respectively.
                             The backbone LLM subsequently processes this multimodal sequence to perform multimodal understanding and generation. 
                             The output vision tokens are then fed into the visual detokenizer to restore the images.
-                            Meanwhile, we observe that the generated concept-centric tokens inherently embed approximate locations of each concept within the original image, as illustrated in \ref{fig:visualTokens}.
                             To exploit this spatial and semantic encoding, we incorporate a lightweight mask decoder utilizing the generated vision tokens as input to yield the referring mask.
                         </p>
                     </div>
