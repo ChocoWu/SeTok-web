@@ -150,7 +150,7 @@
     <div class="container is-max-desktop">
         <div class="columns is-centered has-text-centered">
             <div class="column is-full-width">
-                <h2 class="title is-2">Abstraction</h2>
+                <h2 class="title is-2">Abstract</h2>
                 <div class="content has-text-justified">
                     <p>
                         Multimodal Large Language Models (MLLMs) have demonstrated exceptional capabilities in processing vision-language tasks.
@@ -169,8 +169,8 @@
                     <figcaption>
                         <p style="text-align: left;">
                             <font color="061E61">
-                                <b>Figure 1:</b> Comparisons between existing MLLMs in tokenizing input image via (a) Patchifying image, (b) Codebook, and (c) Cluster Merger.
-                                In (d), we show four language-driven vision tasks enhanced with semantic-equivalent vision tokens where regions with the same color denote a vision token.
+                                <b>Figure 1:</b> Comparison between existing MLLMs in tokenized visual inputs: (a) patch-level continuous token, (b) patch-level discrete token, (c) learnable query token, and (d) semantic-equivalent continuous token (ours).
+                                In (e), we show four language-driven vision tasks enhanced with semantic-equivalent vision tokens, with token masks showing regions of the same color representing a single vision token.
                             </font>
                         </p>
                     </figcaption>
@@ -188,21 +188,46 @@
                 <h2 class="title is-2">Method</h2>
                 <div class="content has-text-justified">
                     <p>
-                        (a) A <b>Vision Cluster</b> is automatically grouping visual features from input images into dynamic number of visual clusters. (b) The <b>Vision Merger</b> is proposed to aggregate visual embeddings beyond merely using cluster centers as definitive vision tokens.
-                        (b) The core backbone is a LLM. (c) The <b>Vision Decoder</b> to decode realistic images by taking the tokenized visual tokens as inputs. (d) The <b>Mask Decoder</b> is taking the vision tokens as input to decode the object mask.
+                        <b>SeTok</b> tokenizes visual features extracted from an image by a vision encoder into semantically equivalent vision tokens, which then are fed into a detokenizer to reconstruct the image and meanwhile employed to perform the concept-level image-text alignment. 
                     </p>
                 </div>
                 <div class="content has-text-justified">
-                    <img class="columns is-centered has-text-centered" src="./static/images/framework.jpeg" alt="Teaser" width="100%"
+                    <img class="columns is-centered has-text-centered" src="./static/images/setok.jpg" alt="Teaser" width="100%"
                          style="margin:0 auto">
                     <br>
                     <figcaption>
-                        <p style="text-align: left;">
+                        <p style="text-align: center;">
                             <font color="061E61">
-                                <b>Figure 2:</b> The overview of <b>SeTokim</b>.  
-                                The visual embedding extracted from a vision encoder is tokenized into vision tokens by <b>SeTok</b>, combined with text tokens to be input LLM for vision-language understanding. 
-                                The output vision embeddings from LLM are fed into a vision decoder and mask decoder to generate realistic images and semantic segmentation masks, respectively. 
+                                <b>Figure 2:</b> Overview of <b>SeTok</b>. 
+                                
                             
+                            </font>
+                        </p>
+                    </figcaption>
+                </div>
+                <div>
+                    <!-- <h2 class="title is-2">Vision Cluster</h2> -->
+                    <div class="content has-text-justified">
+                        <p>
+                            Upon acquiring <b>SeTok</b>, we propose to integrate it with the pre-trained LLM to construct an MLLM, i.e., <b>Setokim</b>.
+                            The overall framework is depicted in Figure 3.
+                            The input image will be tokenized into a sequence of semantic-equivalent visual tokens by <b>SeTok</b>, which are then concatenated with text tokens to form a unified multimodal sequence. 
+                            To effectively distinguish between modalities and facilitate visual content generation, two special tokens, `<em>[Img]</em>' and `<em>[/Img]</em>' are introduced to signify the beginning and the end of the visual sequence, respectively.
+                            The backbone LLM subsequently processes this multimodal sequence to perform multimodal understanding and generation. 
+                            The output vision tokens are then fed into the visual detokenizer to restore the images.
+                            Meanwhile, we observe that the generated concept-centric tokens inherently embed approximate locations of each concept within the original image, as illustrated in \ref{fig:visualTokens}.
+                            To exploit this spatial and semantic encoding, we incorporate a lightweight mask decoder utilizing the generated vision tokens as input to yield the referring mask.
+                        </p>
+                    </div>
+                </div>
+                <div class="content has-text-justified">
+                    <img class="columns is-centered has-text-centered" src="./static/images/framework.jpeg" alt="Teaser" width="50%"
+                         style="margin:0 auto">
+                    <br>
+                    <figcaption>
+                        <p style="text-align: center;">
+                            <font color="061E61">
+                                <b>Figure 3:</b> Overview of <b>SeTokim</b>. 
                             </font>
                         </p>
                     </figcaption>
@@ -228,8 +253,6 @@
                         <li>
                             <b>Step-II: Multimodal Pretraining.</b>
                             In this phase, we enhance the LLM to possess interleaved understanding and generation capabilities for vision-language tasks.
-                            Thus, on the one hand, we adopt next-token prediction-based cross-entropy loss for the textual content generation.
-                            Meanwhile, we employ embedding regression loss to train LLM to generate visual tokens, which are trained to reconstruct the features on the pre-trained vision tokenizer with a Mean Squared Error (MSE) loss. 
                         </li>
                         <li>
                             <b>Step-III: Instruction Tuning.</b>
@@ -325,7 +348,7 @@
                 <h4 class="title is-3">• Visual Tokens</h4>
 
                 <div class="content has-text-justified">
-                    <img class="columns is-centered has-text-centered" src="./static/images/cluster.jpeg" alt="Teaser" width="95%"
+                    <img class="columns is-centered has-text-centered" src="./static/images/cluster.png" alt="Teaser" width="95%"
                          style="margin:0 auto">
                     <br>
                     <figcaption>
